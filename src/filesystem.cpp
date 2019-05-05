@@ -107,7 +107,7 @@ QString File::read(const QVariant& n)
             data = m_file->read(bytesToRead);
         }
         QString ret(data.size(), ' ');
-        for (int i = 0; i < data.size(); ++i) {
+        for(int i = 0; i < data.size(); ++i) {
             ret[i] = data.at(i);
         }
         return ret;
