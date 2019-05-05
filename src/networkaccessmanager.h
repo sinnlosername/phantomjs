@@ -122,10 +122,14 @@ private slots:
     void handleTimeout();
 
 private:
+    void prepareSslConfiguration(const Config* config);
+    QVariantList getHeadersFromReply(const QNetworkReply* reply);
 
     bool shouldCaptureResponse(const QString& url);
     void compileCaptureContentPatterns();
 
+    QHash<QNetworkReply*, int> m_ids;
+    QSet<QNetworkReply*> m_started;
     int m_idCounter;
     QNetworkDiskCache* m_networkDiskCache;
     QVariantMap m_customHeaders;

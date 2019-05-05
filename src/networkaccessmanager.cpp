@@ -261,7 +261,7 @@ void NetworkAccessManager::prepareSslConfiguration(const Config* config)
             }
         }
     }
-	
+
     connect(this, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(provideAuthentication(QNetworkReply*,QAuthenticator*)));
 
     connect(&m_replyTracker, SIGNAL(started(QNetworkReply*, int)), this,  SLOT(handleStarted(QNetworkReply*, int)));
@@ -420,16 +420,16 @@ QNetworkReply* NetworkAccessManager::createRequest(Operation op, const QNetworkR
 
         connect(nt, SIGNAL(timeout()), this, SLOT(handleTimeout()));
     }
-            
+
     connect(reply, SIGNAL(readyRead()), this, SLOT(handleStarted()));
     connect(reply, SIGNAL(sslErrors(const QList<QSslError>&)), this, SLOT(handleSslErrors(const QList<QSslError>&)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(handleNetworkError()));
 
     // synchronous requests will be finished at this point
-    if (reply->isFinished()) {
-        handleFinished(reply);
+    /*if (reply->isFinished()) {
+        handleFinished(reply, m_idCounter, );
         return reply;
-    }
+    }*/
 
     return reply;
 }
@@ -490,18 +490,6 @@ void NetworkAccessManager::handleStarted(QNetworkReply* reply, int requestId)
     data["body"] = "";
 
     emit resourceReceived(data);
-}
-
-void NetworkAccessManager::handleFinished(QNetworkReply* reply)
-{
-    if (!m_ids.contains(reply)) {
-        return;
-    }
-
-    QVariant status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    QVariant statusText = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute);
-
-    this->handleFinished(reply, status, statusText);
 }
 
 void NetworkAccessManager::provideAuthentication(QNetworkReply *reply, QAuthenticator *authenticator)
